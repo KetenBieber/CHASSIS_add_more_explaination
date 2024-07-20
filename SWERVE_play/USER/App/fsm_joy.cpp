@@ -94,6 +94,7 @@ void ROS_Cmd_Process(void)
     UART_TxMsg Msg;
     static Robot_Twist_t twist,twist_ros;
     static Robot_Status_t status;
+    Robot_Twist_t Robot_Real_Twist;
 
     static uint8_t ctrl_flag=0;
     twist.chassis_mode = NORMAL;
@@ -111,6 +112,11 @@ void ROS_Cmd_Process(void)
         status.sensor = ros.readFromRosData.status.sensor;
         status.control_mode = ros.readFromRosData.status.control_mode;
         twist_ros = twist;
+    }
+
+    if(xQueueReceive(Send_ROS_Port,&Robot_Real_Twist,0) == pdPASS)
+    {
+        ros.Send_To_ROS(Robot_Real_Twist);
     }
 
     if(dt>100)

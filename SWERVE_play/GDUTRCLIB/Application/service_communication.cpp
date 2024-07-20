@@ -7,8 +7,6 @@
  * @version 0.1
  * @date 2024-04-09
  * 
- * @copyright Copyright (c) 2024
- * 
  */
 
 #include "service_communication.h"
@@ -80,6 +78,12 @@ void CAN1_RxCallBack(CAN_RxBuffer *RxBuffer)
     {
         switch (RxBuffer->header.StdId)
         {   
+            case 0x02:
+            {
+                DM43.update(RxBuffer->data);
+                break;
+            }
+
             case 0x205:
             {
                 RudderMotor[0].update(RxBuffer->data);

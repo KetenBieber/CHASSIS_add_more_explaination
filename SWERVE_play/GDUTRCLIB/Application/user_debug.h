@@ -7,8 +7,8 @@
 
 #ifdef __cplusplus
 // extern VESC MD4219;
-extern Motor_GM6020 GM6020;
-
+extern Motor_C620 M3508;
+extern DM_Driver DM43;
 extern "C" {
 #endif 
 

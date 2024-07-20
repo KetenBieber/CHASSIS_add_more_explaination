@@ -9,7 +9,7 @@ extern "C" {
 #include "tim.h"
 
 /* Private macros ------------------------------------------------------------*/
-#define microsecond()    Get_SystemTimer()
+#define microsecond Get_SystemTimer
 
 /* Private type --------------------------------------------------------------*/
 typedef struct{

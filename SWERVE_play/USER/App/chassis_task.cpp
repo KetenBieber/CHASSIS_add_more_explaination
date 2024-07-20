@@ -13,6 +13,7 @@
 void Chassis_Task(void *pvParameters)
 {
     static Robot_Twist_t twist;
+    Robot_Twist_t real_twist;
     for(;;)
     {   
         if(xQueueReceive(Chassia_Port, &twist, 0) == pdPASS)
@@ -21,6 +22,10 @@ void Chassis_Task(void *pvParameters)
             chassis.Control(twist);
 			chassis.Motor_Control();
         }
+        
+        //未测试，将逆向解算的底盘速度(机器人坐标系)发送到ROS
+        // real_twist = chassis.Get_Robot_Speed();
+        // xQueueSend(Send_ROS_Port, &real_twist, 0);
 			
         osDelay(1);
     }
@@ -30,9 +35,6 @@ void Chassis_Task(void *pvParameters)
 void Chassis_Pid_Init(void)
 {   
     chassis.accel_vel = 1.5;
-    chassis.Speed_Max.linear.x = 3;
-    chassis.Speed_Max.linear.y = 3;
-    chassis.Speed_Max.angular.z = 4;
 
     chassis.Pid_Param_Init(RUDDER_LEFT_FRONT_Speed_E,12, 0.1, 0, 400, 30000, 0);
     chassis.Pid_Param_Init(RUDDER_RIGHT_FRONT_Speed_E,12, 0.1, 0, 400, 30000, 0);
@@ -63,4 +65,7 @@ void Chassis_Pid_Init(void)
     RudderMotor[2].set_encoder_offset(rr_offset);
     RudderMotor[3].set_encoder_offset(lr_offset);
 
+    chassis.Speed_Max.linear.x = 3;
+    chassis.Speed_Max.linear.y = 3;
+    chassis.Speed_Max.angular.z = 4;
 }

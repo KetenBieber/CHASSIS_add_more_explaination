@@ -2,6 +2,7 @@
  * @file air_joy.cpp
  * @author Yang JianYi
  * @brief 航模手柄的应用文件，使用PPM解析航模手柄的数据
+ * @attention 如果需要使用富斯遥控器的10个通道，请使用ibus协议。PPM协议只支持8个通道
  * @version 0.1
  * @date 2024-04-09
  * 

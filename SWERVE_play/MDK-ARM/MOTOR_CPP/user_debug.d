@@ -74,3 +74,13 @@ motor_cpp\user_debug.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdlib.h
 motor_cpp\user_debug.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
 motor_cpp\user_debug.o: ../GDUTRCLIB/Hardware/serial_tool.h
 motor_cpp\user_debug.o: ../USER/Module/ROS.h
+motor_cpp\user_debug.o: ../USER/Module/Chassis.h
+motor_cpp\user_debug.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\math.h
+motor_cpp\user_debug.o: ../GDUTRCLIB/Application/service_config.h
+motor_cpp\user_debug.o: ../GDUTRCLIB/Components/drive_tim.h
+motor_cpp\user_debug.o: ../Core/Inc/tim.h
+motor_cpp\user_debug.o: ../GDUTRCLIB/Application/service_communication.h
+motor_cpp\user_debug.o: ../GDUTRCLIB/Application/service_config.h
+motor_cpp\user_debug.o: ../USER/Module/air_joy.h
+motor_cpp\user_debug.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stddef.h
+motor_cpp\user_debug.o: ../USER/Module/Broadcast.h

@@ -1,7 +1,8 @@
 /**
  * @file tool.h
- * @author Yang JianYi
- * @brief 该文件用于定义一些通用的工具函数，包括绝对值，限幅，数据转换等。考虑把类去掉，直接使用函数。
+ * @author Yang JianYi(2807643517@qq.com)
+ * @brief 该文件用于定义一些通用的工具函数，包括绝对值，限幅，数据转换等。考虑把类去掉，直接使用函数。该类只用于C++环
+ * 
  * @version 0.1
  * @date 2024-04
  * 
@@ -15,7 +16,7 @@
 
 class Tools
 {
-public:
+protected:
     template<typename Type> 
     Type _tool_Abs(Type x) 
     {
@@ -185,7 +186,34 @@ public:
             return (float)_tool_buffer_get_int32(buffer, index) / scale;
     }
 
+    float DM_fmaxf(float a,float b)//a，b取最大
+    {
+        return a>=b?a:b;
+    }
 
+    float DM_fminf(float a,float b)//a，b取最小
+    {
+        return a<=b?a:b;
+    }
+
+    /***浮点型转整形***
+    入口参数：浮点数据、该数据最小值、该数据最大值、位数
+    *****************/
+    int DM_float_to_uint(float x1,float x1_min,float x1_max,int bits)
+    {
+        float span = x1_max-x1_min;
+        float offset = x1_min;
+        return (int)((x1-offset)*((float)((1<<bits)-1))/span);
+    }
+
+    //整型转浮点型
+    //根据给定的范围和位数，将无符号整数转换为浮点
+    float DM_uint_to_float(int x1_int,float x1_min,float x1_max,int bits)
+    {
+        float span=x1_max-x1_min;
+        float offset=x1_min;
+        return ((float)x1_int)*span/((float)((1<<bits)-1)) + offset;
+    }
 };
 
 

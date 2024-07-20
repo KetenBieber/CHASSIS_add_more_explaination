@@ -5,8 +5,6 @@
  * @version 0.1
  * @date 2024-05-16
  * 
- * @copyright Copyright (c) 2024
- * 
  */
 #include "data_pool.h"
 
@@ -16,6 +14,7 @@ QueueHandle_t  CAN1_TxPort;
 QueueHandle_t  CAN2_TxPort;
 QueueHandle_t  UART_TxPort;
 QueueHandle_t Recieve_ROS_Port;
+QueueHandle_t Send_ROS_Port;
 QueueHandle_t Chassia_Port;
 QueueHandle_t Broadcast_Port;
 
@@ -32,6 +31,7 @@ void DataPool_Init(void)
     CAN2_TxPort = xQueueCreate(CAN2_TxPort_SIZE, sizeof(CAN_TxMsg));
     UART_TxPort = xQueueCreate(UART_TxPort_SIZE, sizeof(UART_TxMsg));
     Recieve_ROS_Port = xQueueCreate(Recieve_ROS_Port_SIZE, sizeof(UART_TxMsg));
+    Send_ROS_Port = xQueueCreate(Send_ROS_Port_SIZE, sizeof(Robot_Twist_t));
     Chassia_Port = xQueueCreate(Chassia_Port_SIZE, sizeof(Robot_Twist_t));
     Broadcast_Port = xQueueCreate(Broadcast_Port_SIZE, sizeof(Robot_Status_t));
 }

@@ -32,16 +32,18 @@ uint8_t ROS::getMicroTick_regist(uint32_t (*getTick_fun)(void))
 
 /**
  * @brief stm32 send data to ROS
- * 
+ * @note 该函数用于将数据打包发送给ROS, 通过轮子速度解算后的速度转化为了mm/s和mRad/s
  */
-void ROS::Send_To_ROS(void)
+void ROS::Send_To_ROS(Robot_Twist_t speed)
 {
-    uint8_t buffer[1+6];
+    uint8_t buffer[6+6];
     int index = 0;
     buffer[index++] = header[0];
     buffer[index++] = header[1];
     buffer[index++] = 1;
-    buffer[index++] = 0;
+    _tool_buffer_append_int16(buffer, (int16_t)(speed.linear.x*1000), &index);
+    _tool_buffer_append_int16(buffer, (int16_t)(speed.linear.y*1000), &index);
+    _tool_buffer_append_int16(buffer, (int16_t)(speed.angular.z*1000), &index);
     buffer[index++] = serial_get_crc8_value(buffer, 4);
     buffer[index++] = tail[0];
     buffer[index++] = tail[1];

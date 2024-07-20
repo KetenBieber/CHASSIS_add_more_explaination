@@ -8,8 +8,6 @@
  * @version 0.1
  * @date 2024-03-28
  * 
- * @copyright Copyright (c) 2024
- * 
  */
 
 
@@ -167,7 +165,7 @@ void comm_can_transmit_extid(CAN_HandleTypeDef* hcan, uint32_t ExtId, uint8_t *p
     }
 
     TxHeader.ExtId = ExtId; //VESC电调id
-    TxHeader.IDE = CAN_ID_EXT;     //使用拓展帧
+    TxHeader.IDE = CAN_ID_EXT;     //使用拓展帧 CAN_ID_STD
     TxHeader.RTR = CAN_RTR_DATA;   
 	TxHeader.DLC = length;     //数据长度
     TxHeader.TransmitGlobalTime = DISABLE;  //不发送标记时间

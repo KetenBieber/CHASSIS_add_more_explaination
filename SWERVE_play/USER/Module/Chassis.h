@@ -9,6 +9,7 @@ typedef uint32_t (*SystemTick_Fun)(void);
 #define PI 3.1415926f
 
 #ifdef __cplusplus
+
 extern "C" {
 #endif 
 
@@ -18,6 +19,7 @@ typedef struct Swerve_t     //used for swerve chassis
     float wheel_vel;    //the velocity of wheel
     float target_angle; //the target angle of rudder
     float now_angle;    //the now angle of rudder
+    float real_angle;  //用于逆解算的底盘速度，0~360度
 }Swerve_t;
 
 typedef struct Wheel_t    //used for mecanum chassis and omni chassis
@@ -128,6 +130,7 @@ public:
     bool chassis_is_init = false;
     void Control(Robot_Twist_t cmd_vel);
     int Motor_Control(void);
+    Robot_Twist_t Get_Robot_Speed(void);
     void Pid_Param_Init(CHASSIS_PID_E PID_Type, float Kp, float Ki, float Kd, float Integral_Max, float Out_Max, float DeadZone);
     void Pid_Mode_Init(CHASSIS_PID_E PID_Type, float LowPass_error, float LowPass_d_err, bool D_of_Current, bool Imcreatement_of_Out);
 

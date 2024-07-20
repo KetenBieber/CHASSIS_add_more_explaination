@@ -29,6 +29,7 @@ extern "C"{
 #endif                                  
 void System_Resource_Init(void);   
 void App_Init(void);
+void motor_init(void);
 
 #ifdef  __cplusplus
 }

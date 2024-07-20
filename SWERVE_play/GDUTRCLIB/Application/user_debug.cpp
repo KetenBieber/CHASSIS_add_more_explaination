@@ -4,37 +4,40 @@
  * @brief 用于调试的任务
  * @version 0.1
  * 
- * @copyright Copyright (c) 2024
- * 
  */
 #include "user_debug.h"
 #include "serial_tool.h"
 #include "ROS.h"
+#include "Chassis.h"
+
+Motor_C620 M3508(4);
+VESC MD4219(103);
+DM_Driver DM43(2);
 
 void User_Debug_Task(void *pvParameters)
 {
 #if USE_DEBUG_TASK
-    float angle1;
-    PID PID_Speed,PID_Pos;
-    PID_Speed.PID_Param_Init(12, 0.1, 0, 400, 30000);
-    PID_Speed.D_of_Current = true;
-    PID_Speed.Imcreatement_of_Out = true;
-	
-    PID_Pos.PID_Param_Init(150, 0.2, 0.8, 400, 30000);
-    PID_Pos.D_of_Current = true;
-    PID_Pos.Imcreatement_of_Out = false;
-    PID_Pos.target = 0;
-    PID_Pos.LowPass_d_err.Trust = 0.5;
-    PID_Pos.DeadZone = 0.05;
-	GM6020.encoder_offset=4096;
+    // PID PID_Speed;
+    // PID_Speed.PID_Param_Init(12, 0.1, 0, 400, 30000, 1);
+    // PID_Speed.PID_Mode_Init(0.8, 1, true, true);
+	// PID_Speed.target = 2000;
     
+    MD4219.Mode = SET_eRPM;
+    MD4219.Out = 2000;
     for(;;)
-    {
-        PID_Speed.current = GM6020.get_speed();
-        angle1 = PID_Pos.current = GM6020.get_angle();
-        PID_Speed.target = PID_Pos.Adjust();
-        GM6020.Out = PID_Speed.Adjust();
-        RM_Motor_SendMsgs(&hcan1, GM6020);
+    {           
+
+        // PID_Speed.current = M3508.get_speed();
+        // M3508.Out = PID_Speed.Adjust();
+        // Motor_SendMsgs(&hcan1, M3508);
+        Motor_SendMsgs(&hcan2, MD4219);
+        DM43.Motor_Status = CMD_MOTOR_POSITION;
+        DM43.Pos_Out = 3.14;
+        DM43.Vel_Out = 5;
+        
+        // Motor_SendMsgs(&hcan1, M3508);
+        // Motor_SendMsgs(&hcan1, RudderMotor);
+        // Motor_SendMsgs(&hcan1, DM43);
         osDelay(1);
     }
 #else

@@ -29,7 +29,7 @@ public:
         tail[0] = 0x0D;
         tail[1] = 0x0A;
     }
-    void Send_To_ROS(void);
+    void Send_To_ROS(Robot_Twist_t speed);
     int8_t Recieve_From_ROS(uint8_t *buffer);
     readFromRos readFromRosData;
     static uint8_t getMicroTick_regist(uint32_t (*getTick_fun)(void));

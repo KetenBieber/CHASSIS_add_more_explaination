@@ -51,6 +51,7 @@
 "motor_cpp\drive_can.o"
 "motor_cpp\drive_tim.o"
 "motor_cpp\drive_uart.o"
+"motor_cpp\drive_iic.o"
 "motor_cpp\filter.o"
 "motor_cpp\pid.o"
 "motor_cpp\chassis_task.o"

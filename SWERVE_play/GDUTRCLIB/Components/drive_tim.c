@@ -3,10 +3,13 @@
  * @author Yang Jianyi (2807643517@qq.com)
  * @brief 1)tim底层驱动文件，用于实现定时器的初始化和延时函数。一般不使用阻塞式延时。
  * 		  2)需要获取当前时间时，可以使用Get_SystemTimer()函数。Get_SystemTimer()在类中的使用可以参考PID类(PID.cpp)或者ROS的通讯类(ROS.cpp)
+ *  @note
+      -# 使用`Timer_Init()`设置延时定时器`TIM_X`,设置`delay_ms()`函数使用HAL库的实现
+          `HAL_Delay()`或使用模块内方法实现。		
+      -# 配置`TIM_X`自增时间为1us，在对应中断函数中加入:`Update_SystemTick();`。
+      -# 在需要延时的地方使用`delay_us_nos()`或`delay_ms_noe()`。
  * @version 0.1
  * @date 2024-03-30
- * 
- * @copyright Copyright (c) 2024
  * 
  */
 
@@ -123,6 +126,7 @@ void Set_PwmFreq(TIM_HandleTypeDef* htim, uint32_t freq)
 /**
 * @brief  Delay microsecond.
 * @param  cnt : microsecond to delay 
+* @note 阻塞式延时
 * @retval None
 */
 void delay_us_nos(uint32_t cnt)
@@ -136,6 +140,7 @@ void delay_us_nos(uint32_t cnt)
 /**
 * @brief  Delay millisecond.
 * @param  cnt : millisecond to delay
+* @note 阻塞式延时
 * @retval None
 */
 void delay_ms_nos(uint32_t cnt)

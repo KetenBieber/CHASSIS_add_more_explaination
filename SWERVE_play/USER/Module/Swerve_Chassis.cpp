@@ -19,7 +19,8 @@ VESC WheelMotor[4] = {VESC(1), VESC(2), VESC(3), VESC(4)};
 
 SystemTick_Fun Chassis_Base::get_systemTick = NULL;
 
-int32_t ABS(int32_t a)
+template <typename Type>
+Type ABS(Type a)
 {
     if(a<0)
         return -a;
@@ -126,7 +127,7 @@ void Swerve_Chassis::Control(Robot_Twist_t cmd_vel)
                     break;
             }
 
-            //使用加速度控制底盘速度
+            //使用加速度控制底盘速度,
             #if USE_VEL_ACCEL
             if(swerve[i].wheel_vel > 0 && swerve[i].wheel_vel >= last_wheel_vel[i])
                 swerve[i].wheel_vel = last_wheel_vel[i] + accel_vel*dt*ChassisVel_Trans_MotorRPM(Wheel_Radius, 21);
@@ -176,26 +177,26 @@ void Swerve_Chassis::Control(Robot_Twist_t cmd_vel)
  */
 int Swerve_Chassis::Motor_Control(void)
 {
-    RM_Motor_SendMsgs(&hcan1, RudderMotor);
+    Motor_SendMsgs(&hcan1, RudderMotor);
 
     //由于担心是一个任务同时发送太多can帧，防止阻塞严重，把can帧速度拉低。
     //方法比较简陋，希望后来者可以改善这个问题并做好封装
 	static int send_flag=0;
     if(send_flag<1)
     {
-        VESC_SendMsgs(&hcan2, WheelMotor[0]);
+        Motor_SendMsgs(&hcan2, WheelMotor[0]);
     }
     else if (send_flag>=1&&send_flag<2)
     {
-        VESC_SendMsgs(&hcan2, WheelMotor[1]);
+        Motor_SendMsgs(&hcan2, WheelMotor[1]);
     }
     else if (send_flag>=2&&send_flag<3)
     {
-        VESC_SendMsgs(&hcan2, WheelMotor[2]);
+        Motor_SendMsgs(&hcan2, WheelMotor[2]);
     }
     else if (send_flag>=3&&send_flag<4)
     {
-        VESC_SendMsgs(&hcan2, WheelMotor[3]);
+        Motor_SendMsgs(&hcan2, WheelMotor[3]);
     }
     else
     {
@@ -239,7 +240,7 @@ void Swerve_Chassis::Velocity_Calculate(Robot_Twist_t cmd_vel, Swerve_t *swerve)
     swerve->target_angle = atan2f(wheel_Vy,wheel_Vx)/PI*180;   // -180~180
     
     //底盘速度赋值为0时，刹车
-    if(ABS(cmd_vel.linear.x)-0.02<=0&&ABS(cmd_vel.linear.y)-0.02<=0&&ABS(cmd_vel.angular.z)-0.02<=0)
+    if(ABS(cmd_vel.linear.x)-0.02f<=0&&ABS(cmd_vel.linear.y)-0.02f<=0&&ABS(cmd_vel.angular.z)-0.02f<=0)
     {
         //设置刹车电流   
         WheelMotor[swerve->num-1].Mode = SET_BRAKE;
@@ -326,6 +327,8 @@ void Swerve_Chassis::RudderAngle_Adjust(Swerve_t *swerve)
 
 
     swerve->target_angle = swerve->target_angle + N*360.0f;
+    swerve->real_angle = RudderMotor[swerve->num-1].get_angle() - N*360.0f;  //未经过劣弧计算的实际角度
+
     error = abs(swerve->target_angle - swerve->now_angle);
 
     if(swerve->target_angle < swerve->now_angle)
@@ -527,6 +530,30 @@ void Swerve_Chassis::Chassis_Lock(Swerve_t *swerve)
             swerve->target_angle = swerve->now_angle-N*360.0f;
         reset_flag = 0;
     }
+}
+
+
+Robot_Twist_t Swerve_Chassis::Get_Robot_Speed(void)
+{
+    Robot_Twist_t real_twist;
+    real_twist.linear.x = (WheelMotor[0].get_speed()*cos(swerve[0].real_angle*PI/180) + 
+                           WheelMotor[1].get_speed()*cos(swerve[1].real_angle*PI/180) + 
+                           WheelMotor[2].get_speed()*cos(swerve[2].real_angle*PI/180) + 
+                           WheelMotor[3].get_speed()*cos(swerve[3].real_angle*PI/180))/
+                           (4.0f * MotorRPM_Trans_ChassisVel(Wheel_Radius, 21));
+
+    real_twist.linear.y = (WheelMotor[0].get_speed()*sin(swerve[0].real_angle*PI/180) +
+                           WheelMotor[1].get_speed()*sin(swerve[1].real_angle*PI/180) +
+                           WheelMotor[2].get_speed()*sin(swerve[2].real_angle*PI/180) +
+                           WheelMotor[3].get_speed()*sin(swerve[3].real_angle*PI/180))/
+                           (4.0f * MotorRPM_Trans_ChassisVel(Wheel_Radius, 21));
+    
+    real_twist.angular.z = (WheelMotor[0].get_speed()*cos(swerve[0].real_angle*PI/180) + 
+                            WheelMotor[1].get_speed()*cos(swerve[1].real_angle*PI/180) - 
+                            WheelMotor[2].get_speed()*cos(swerve[2].real_angle*PI/180) - 
+                            WheelMotor[3].get_speed()*cos(swerve[3].real_angle*PI/180))/
+                            (4.0f*Chassis_Radius*COS * MotorRPM_Trans_ChassisVel(Wheel_Radius, 21));
+    return real_twist;
 }
 
 

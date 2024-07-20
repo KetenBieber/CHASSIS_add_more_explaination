@@ -1425,6 +1425,11 @@
               <FileType>1</FileType>
               <FilePath>..\GDUTRCLIB\Components\drive_uart.c</FilePath>
             </File>
+            <File>
+              <FileName>drive_iic.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\GDUTRCLIB\Components\drive_iic.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>

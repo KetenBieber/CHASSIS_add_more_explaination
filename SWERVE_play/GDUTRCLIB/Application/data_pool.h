@@ -15,6 +15,7 @@
 #define CAN2_TxPort_SIZE 8
 #define UART_TxPort_SIZE 4
 #define Recieve_ROS_Port_SIZE 4
+#define Send_ROS_Port_SIZE 4
 #define Chassia_Port_SIZE 4
 #define Broadcast_Port_SIZE 2
 
@@ -41,6 +42,7 @@ extern xQueueHandle CAN1_TxPort;
 extern xQueueHandle CAN2_TxPort;
 extern xQueueHandle UART_TxPort;
 extern xQueueHandle Recieve_ROS_Port;
+extern xQueueHandle Send_ROS_Port;
 extern xQueueHandle Chassia_Port;
 extern xQueueHandle Broadcast_Port;
 
@@ -127,6 +129,17 @@ typedef struct UART_TxMsg
     uint16_t len;				//数据长度
     void* data_addr;			//数据地址，使用时把地址赋值给这个指针。数据强转为uint8_t
 }UART_TxMsg;
+
+
+//达妙电机状态参数枚举
+typedef enum DM_MOTORCMD
+{
+	CMD_MOTOR_SPEED = 0x01,
+	CMD_MOTOR_POSITION = 0x02,
+	CMD_MOTOR_ENABLE = 0xFC,
+	CMD_MOTOR_DISABLE = 0xFD,
+	CMD_MOTOR_ZERO_SET = 0xFE,
+}DM_MOTORCMD;
 
 
 //VESC状态参数结构体，来源于VESC驱动源码

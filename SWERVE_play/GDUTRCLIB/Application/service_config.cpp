@@ -5,8 +5,6 @@
  * @version 0.1
  * @date 2024-05-16
  * 
- * @copyright Copyright (c) 2024
- * 
  */
 #include "service_config.h"
 #include "chassis_task.h"
@@ -38,5 +36,11 @@ void App_Init(void)
     ROS::getMicroTick_regist(Get_SystemTimer);
     Chassis_Base::getMicroTick_regist(Get_SystemTimer);
     Broadcast::getMicroTick_regist(Get_SystemTimer);
+    // motor_init();
 }
 
+void motor_init(void)
+{
+    DM43.Motor_Status = CMD_MOTOR_ENABLE;
+    Motor_SendMsgs(&hcan1, DM43);
+}
