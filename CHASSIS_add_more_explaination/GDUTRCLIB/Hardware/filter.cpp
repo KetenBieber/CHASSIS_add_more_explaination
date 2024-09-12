@@ -6,7 +6,7 @@ void LowPassFilter::in(float num)
 	now_num = num;
 }
 
-
+// 低通滤波器
 float LowPassFilter::out()							
 {
 	return (now_num*Trust + last_num * (1 - Trust));
