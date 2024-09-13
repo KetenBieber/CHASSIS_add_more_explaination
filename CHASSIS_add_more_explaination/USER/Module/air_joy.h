@@ -5,8 +5,25 @@
 #include "stm32f4xx_hal.h"
 #include "string.h"
 
-
-
+/**
+ * @brief 在这里补充一点c/c++混编的知识
+ *        extern "C"
+ *        {
+ *            // 在这里可以进行纯c的编程 
+ *        }  
+ *        而且要注意,extern "C" 这个关键字只能在 #ifdef __cplusplus 之内使用
+ *       
+ * 
+ */
+/* 所以你可以看到为什么
+        extern "C" {
+        #endif
+        // 在这里可以进行纯c的编程
+        // 然后想要结束这部分的编程,必须要先重新#ifdef __cplusplus
+        #ifdef __cplusplus
+        }
+        // 才可以将extern "C"的部分结束
+*/
 #ifdef __cplusplus
 typedef uint32_t (*SystemTick_Fun)(void);
 class AirJoy
@@ -27,7 +44,7 @@ private:
 
 extern "C" {
 #endif
-
+// 在这里可以进行纯c的编程
 #ifdef __cplusplus
 }
 extern AirJoy air_joy;
